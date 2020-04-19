@@ -22,7 +22,7 @@ class Products extends Component {
           checkboxSelection: true
         },
         {
-          headerName: "CoverImage",
+          headerName: "Cover Image",
           field: "coverImage",
           sortable: true,
           filter: true,
@@ -40,6 +40,16 @@ class Products extends Component {
         },
       ],
       rowData: productItems.sort((a, b) => a.score - b.score),
+      isRowSelectable: function (e) {
+        return e.gridApi.getSelectedNodes().length < 3 ? true : false;
+      },
+      onSelectionChanged: function (e) {
+        console.log(e);
+        let { isRowSelectable } = this;
+        e.api.getSelectedNodes().length < 3
+          ? (isRowSelectable = true)
+          : (isRowSelectable = false);
+      },
     };
   }
   render() {
@@ -56,8 +66,10 @@ class Products extends Component {
           rowData={this.state.rowData}
           pagination={true}
           paginationPageSize={5}
-          rowSelection={'multiple'}
+          rowSelection={"multiple"}
           rowMultiSelectWithClick={true}
+          onSelectionChanged={this.state.onSelectionChanged}
+          isRowSelectable={this.state.isRowSelectable}
         ></AgGridReact>
       </div>
     );
